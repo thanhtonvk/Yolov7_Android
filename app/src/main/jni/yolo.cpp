@@ -268,7 +268,7 @@ int Yolo::detect(const cv::Mat &rgb, std::vector<Object> &objects, float prob_th
     // stride 8
     {
         ncnn::Mat out;
-        ex.extract("output", out);
+        ex.extract("/model.77/m.0/Conv_output_0", out);
 
         ncnn::Mat anchors(6);
         anchors[0] = 12.f;
@@ -287,7 +287,7 @@ int Yolo::detect(const cv::Mat &rgb, std::vector<Object> &objects, float prob_th
     // stride 16
     {
         ncnn::Mat out;
-        ex.extract("292", out);
+        ex.extract("/model.77/m.1/Conv_output_0", out);
 
         ncnn::Mat anchors(6);
         anchors[0] = 36.f;
@@ -306,7 +306,7 @@ int Yolo::detect(const cv::Mat &rgb, std::vector<Object> &objects, float prob_th
     // stride 32
     {
         ncnn::Mat out;
-        ex.extract("304", out);
+        ex.extract("/model.77/m.2/Conv_output_0", out);
 
         ncnn::Mat anchors(6);
         anchors[0] = 142.f;
@@ -358,7 +358,7 @@ int Yolo::detect(const cv::Mat &rgb, std::vector<Object> &objects, float prob_th
 
 int Yolo::draw(cv::Mat &rgb, const std::vector<Object> &objects) {
     static const char *class_names[] = {
-            "person", "bicycle", "car", "motorcycle", "airplane"};
+            "top_left", "top_right", "bottom_right", "bottom_left", "center"};
     static const unsigned char colors[19][3] = {
             {54,  67, 244},
             {99,  30, 233},

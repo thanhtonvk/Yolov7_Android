@@ -162,8 +162,7 @@ JNIEXPORT jboolean JNICALL Java_com_example_burmakeypoint_NcnnYolov7_loadModel(J
 
     const char* modeltypes[] =
     {
-        "keypoint_detector-sim-opt-fp16",
-        "yolov7-tiny"
+        "yolov7_keypoint_detector-sim-opt-fp16",
     };
 
     const int target_sizes[] =
@@ -236,4 +235,10 @@ JNIEXPORT jboolean JNICALL Java_com_example_burmakeypoint_NcnnYolov7_setOutputWi
     return JNI_TRUE;
 }
 
+}
+
+extern "C"
+JNIEXPORT jfloatArray JNICALL
+Java_com_example_burmakeypoint_NcnnYolov7_getPosition(JNIEnv *env, jobject thiz) {
+    // TODO: implement getPosition()
 }
