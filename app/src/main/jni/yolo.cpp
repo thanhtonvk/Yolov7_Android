@@ -2,7 +2,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include "cpu.h"
-
+#include <set>
 
 static inline float intersection_area(const Object &a, const Object &b) {
     cv::Rect_<float> inter = a.rect & b.rect;
@@ -356,6 +356,22 @@ int Yolo::detect(const cv::Mat &rgb, std::vector<Object> &objects, float prob_th
     return 0;
 }
 
+int Yolo::checkValid(const std::vector<Object> &objects) {
+    std::set<int> unique_labels;
+    for (size_t i = 0; i < objects.size(); i++) {
+        const Object &obj = objects[i];
+        int label = obj.label;
+        unique_labels.insert(label);
+    }
+    std::set<int> required_labels = {0, 1, 2, 3, 4};
+    if (unique_labels == required_labels) {
+        return 1;
+    } else {
+        return 0;
+    }
+
+}
+
 int Yolo::draw(cv::Mat &rgb, const std::vector<Object> &objects) {
     static const char *class_names[] = {
             "top_left", "top_right", "bottom_right", "bottom_left", "center"};
@@ -367,10 +383,14 @@ int Yolo::draw(cv::Mat &rgb, const std::vector<Object> &objects) {
             {181, 81, 63}
     };
 
+    std::set<int> unique_labels;
+
     int color_index = 0;
 
     for (size_t i = 0; i < objects.size(); i++) {
         const Object &obj = objects[i];
+        int label = obj.label;
+        unique_labels.insert(label);
 
         const unsigned char *color = colors[color_index % 19];
         color_index++;
@@ -398,6 +418,27 @@ int Yolo::draw(cv::Mat &rgb, const std::vector<Object> &objects) {
                                                                     : cv::Scalar(255, 255, 255);
         cv::putText(rgb, text, cv::Point(x, y + label_size.height), cv::FONT_HERSHEY_SIMPLEX, 0.5,
                     textcc, 1);
+    }
+    std::set<int> required_labels = {0, 1, 2, 3, 4};
+    cv::Point position(0, 25);
+
+    // Define the font settings
+    int fontFace = cv::FONT_HERSHEY_SIMPLEX;
+    double fontScale = 0.5;
+
+    int fontThickness = 2;
+    if (unique_labels == required_labels) {
+        std::string text = "Valid";
+
+        cv::Scalar fontColor(0, 128, 0);
+        // Put text on the image
+        cv::putText(rgb, text, position, fontFace, fontScale, fontColor, fontThickness);
+    } else {
+        std::string text = "Invalid";
+
+        cv::Scalar fontColor(255, 0, 0);
+        // Put text on the image
+        cv::putText(rgb, text, position, fontFace, fontScale, fontColor, fontThickness);
     }
 
     return 0;

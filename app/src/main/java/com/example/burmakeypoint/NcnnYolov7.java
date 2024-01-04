@@ -6,10 +6,12 @@ import android.view.Surface;
 
 public class NcnnYolov7 {
     public native boolean loadModel(AssetManager mgr, int modelid, int cpugpu);
+
     public native boolean openCamera(int facing);
+
     public native boolean closeCamera();
+
     public native boolean setOutputWindow(Surface surface);
-    public native float[] getPosition();
 
     static {
         System.loadLibrary("ncnnyolov7");
